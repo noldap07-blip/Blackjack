@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <time.h>
 
 #define RANKS 13
 #define SUITS 4 
@@ -31,14 +33,15 @@ Game rules
 - At the end if the players value is greater than the dealer's, the player wins 
 */
 
-void getCardText(int rank, int suit, char[]); 
+void getCardText(int, int, char[]);//fucntion for printing the text of a card when given its array position
+void randomCard(int[][SUITS]);//function that will pick a random rank and suit
 
 int main(){
-
     int column = 0;
     int row    = 0;
-
     int deck[13][4];
+
+    srand(time(NULL));//set seed for random nums
     /*
     RULES FOR ARRAY
 
@@ -60,28 +63,29 @@ int main(){
         // printf("\n");
     }
     
-    //make it so i can input deck[3][2] and have terminal say "4 of clubs"
+    randomCard(deck);
 
-    // printf("What Row?");
-    // scanf("%d", &row);
-    
-    // printf("What Column?");
-    // scanf("%d", &column);
+    // char currentC[BIGENOUGH] = "";
+    // getCardText(13, 3, currentC);
+    // printf("%s", currentC);
 
-    //have it call a new function called Get Card
-    // getCard(row, column);
-
-    // for(int i = 0; i < RANKS; i++){
-    //     for(int j = 0; j < SUITS; j++){
-    //         getCard(i, j);
-    //     }
-    //     printf("\n");
-    // }
-
-    char currentC[BIGENOUGH] = "";
-    getCardText(13, 3, currentC);
-    printf("%s", currentC);
     return 0;
+}
+
+void randomCard(int (*d)[SUITS]){
+    int randone = 0;
+    int randtwo = 0;
+
+    do {
+        randone = rand() % RANKS;
+        randtwo = rand() % SUITS;
+    } while(d[randone][randtwo] == 0);
+
+
+    //testing to make sure this works
+    char temp[BIGENOUGH] = "";
+    getCardText(randone, randtwo, temp);
+    printf("%s", temp);
 }
 
 void getCardText(int r, int s, char *str){
