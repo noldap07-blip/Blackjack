@@ -35,6 +35,7 @@ Game rules
 
 void getCardText(int, int, char[]);//fucntion for printing the text of a card when given its array position
 void randomCard(int[][SUITS]);//function that will pick a random rank and suit
+void printDeck(int[][SUITS]);//print the deck
 
 int main(){
     int column = 0;
@@ -58,17 +59,21 @@ int main(){
     for(int i = 0; i < RANKS; i++){
         for(int j = 0; j < SUITS; j++){
             deck[i][j] = 1;
-            // printf("[%d] ", deck[i][j]);
         }
-        // printf("\n");
     }
     
+    printDeck(deck);
+
     randomCard(deck);
+    printf("\n");
+    randomCard(deck);
+
+    printDeck(deck);
 
     // char currentC[BIGENOUGH] = "";
     // getCardText(13, 3, currentC);
     // printf("%s", currentC);
-
+ 
     return 0;
 }
 
@@ -77,15 +82,18 @@ void randomCard(int (*d)[SUITS]){
     int randtwo = 0;
 
     do {
+
         randone = rand() % RANKS;
         randtwo = rand() % SUITS;
+
     } while(d[randone][randtwo] == 0);
 
-
     //testing to make sure this works
+    
     char temp[BIGENOUGH] = "";
     getCardText(randone, randtwo, temp);
     printf("%s", temp);
+    d[randone][randtwo] = 0;
 }
 
 void getCardText(int r, int s, char *str){
@@ -128,4 +136,15 @@ void getCardText(int r, int s, char *str){
             break;
     }
 
+}
+
+void printDeck(int (*d)[SUITS]){
+    
+    printf("\n");
+    for(int i = 0; i < RANKS; i++){
+        for(int j = 0; j < SUITS; j++){
+            printf("[%d] ", d[i][j]);
+        }
+        printf("\n");
+    }
 }
