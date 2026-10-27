@@ -34,8 +34,9 @@ Game rules
 */
 
 void getCardText(int, int, char[]);//fucntion for printing the text of a card when given its array position
-void randomCard(int[][SUITS]);//function that will pick a random rank and suit
+void drawCard(int[][SUITS], int hand);//function that will pick a random rank and suit
 void printDeck(int[][SUITS]);//print the deck
+ 
 
 int main(){
     int column = 0;
@@ -43,6 +44,7 @@ int main(){
     int deck[13][4];
 
     srand(time(NULL));//set seed for random nums
+    
     /*
     RULES FOR ARRAY
 
@@ -51,9 +53,42 @@ int main(){
         - so a 4 of clubs would be deck[3][2];
     - in the arary, by deafult every cell is set to 1.
     - a value of 1 for a cell means that card is still in the deck
-    - when a card is drawn the cell is set to 0 
+    - when a card is drawn it is either set to 0 or 2
+        - 0 means in the player hand 
+        - 2 means in the dealer hand
 
     */
+    /*
+        Game starts
+        player and dealer have 2 cards
+            player can only see one of dealers cards.
+        player decides to hit or stand, once they decide to stand, its the dealers turn 
+        dealer flips their face down card, and hits until they are at 17 or higher
+        this means the program needs a way to determine which card was draw first for the dealer, that way, while the second card is face down we only print the first card that was drawn
+
+        best way to handle this with code
+            -player and dealer pick 2 cards at the start.
+            -if it is still the players turn, everytime they are prompted to stand or hit, it should print out their cards and dealers
+            -so while we are still in the game loop, we need to only print the first card the dealer drew.
+            -but this means we need a way to store the order the cards are drwan and added to each hand
+                - this could be done by making two new arrays. 
+                - playerHand[2][12]; 
+                - dealerHand[2][12];    
+                - think of it like this: [][][][][]...
+                                        [][][][][]...
+                - player draws a 2 of hearts deck[2][0]: [1][][][][]...
+                                                        [0][][][][]...
+
+                - player draws a 6 of clubs deck[5][2]:  [1][5][][][]...
+                                                        [0][2][][][]...
+
+                - each column represents one card
+                    - row 0 stores the cards rank position in deck[][]
+                    - row 1 stores the cards suit position in deck[][]
+                - so, in the program when i want to print the first card in the dealers hand, i can do:
+                - getCardText(dealerHand[0][0], dealerHand[1][0], string)
+                - Awesome!
+    */ 
 
     //set every value in the deck to 1, meaning every card is in the deck
     for(int i = 0; i < RANKS; i++){
@@ -63,21 +98,27 @@ int main(){
     }
     
     printDeck(deck);
-
-    randomCard(deck);
+    
+    //player draw
+    drawCard(deck, 0);
     printf("\n");
-    randomCard(deck);
+    drawCard(deck, 0);
+
+    printf("\n");
+
+    //dealer draw
+    drawCard(deck, 2);
+    printf("\n");
+    drawCard(deck, 2);
 
     printDeck(deck);
-
-    // char currentC[BIGENOUGH] = "";
-    // getCardText(13, 3, currentC);
-    // printf("%s", currentC);
  
     return 0;
 }
 
-void randomCard(int (*d)[SUITS]){
+
+
+void drawCard(int (*d)[SUITS], int hand){
     int randone = 0;
     int randtwo = 0;
 
@@ -86,15 +127,12 @@ void randomCard(int (*d)[SUITS]){
         randone = rand() % RANKS;
         randtwo = rand() % SUITS;
 
-    } while(d[randone][randtwo] == 0);
+    } while(d[randone][randtwo] != 1);
 
-    //testing to make sure this works
-    
-    char temp[BIGENOUGH] = "";
-    getCardText(randone, randtwo, temp);
-    printf("%s", temp);
+    //set the picked card to be 0 in the deck
     d[randone][randtwo] = 0;
 }
+
 
 void getCardText(int r, int s, char *str){
     //we take a string that is already set to size 128 and is empty 
@@ -138,6 +176,7 @@ void getCardText(int r, int s, char *str){
 
 }
 
+
 void printDeck(int (*d)[SUITS]){
     
     printf("\n");
@@ -148,3 +187,5 @@ void printDeck(int (*d)[SUITS]){
         printf("\n");
     }
 }
+
+ 
