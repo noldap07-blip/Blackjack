@@ -34,14 +34,19 @@ Game rules
 */
 
 void getCardText(int, int, char[]);//fucntion for printing the text of a card when given its array position
-void drawCard(int[][SUITS], int hand);//function that will pick a random rank and suit
+void drawCard(int[][SUITS], int hand[][12], int *);//function that will pick a random rank and suit then add it to the given hand
 void printDeck(int[][SUITS]);//print the deck
  
 
 int main(){
     int column = 0;
     int row    = 0;
+    int pCards = 0;//keep track of how many cards player has
+    int dcards = 0;//keep track of how many cards dealer has
+
     int deck[13][4];
+    int pHand[2][12] = {0}; 
+    int dHand[2][12] = {0}; 
 
     srand(time(NULL));//set seed for random nums
     
@@ -98,27 +103,27 @@ int main(){
     }
     
     printDeck(deck);
+    printf("\n");
     
     //player draw
-    drawCard(deck, 0);
-    printf("\n");
-    drawCard(deck, 0);
-
-    printf("\n");
-
-    //dealer draw
-    drawCard(deck, 2);
-    printf("\n");
-    drawCard(deck, 2);
-
-    printDeck(deck);
+    drawCard(deck, pHand, &pCards);
+    drawCard(deck, pHand, &pCards);
  
+    for(int i = 0; i < pCards; i++){
+        char temp[BIGENOUGH] = "";
+        getCardText(pHand[0][i], pHand[1][i], temp);
+        printf("[%s] ", temp);
+    }
+
+    printf("\n");
+    printDeck(deck);
+
     return 0;
 }
 
 
-
-void drawCard(int (*d)[SUITS], int hand){
+//function takes the deck array, the given handarray, and what card number we are at for that hand (eg. 3rd card in the players hand).
+void drawCard(int (*d)[SUITS], int hand[][12], int *nth){
     int randone = 0;
     int randtwo = 0;
 
@@ -131,6 +136,11 @@ void drawCard(int (*d)[SUITS], int hand){
 
     //set the picked card to be 0 in the deck
     d[randone][randtwo] = 0;
+
+    //send the picked card's rank and suit position to the given hand array
+    hand[0][*nth] = randone;//save the rank
+    hand[1][*nth] = randtwo;//save the suit 
+    (*nth)++;
 }
 
 
