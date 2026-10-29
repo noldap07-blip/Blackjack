@@ -35,14 +35,16 @@ Game rules
 
 void getCardText(int, int, char[]);//fucntion for printing the text of a card when given its array position
 void drawCard(int[][SUITS], int hand[][12], int *);//function that will pick a random rank and suit then add it to the given hand
+void printHand(int hand[][12], int count);//function will print each card in the given hand
 void printDeck(int[][SUITS]);//print the deck
+
  
 
 int main(){
     int column = 0;
     int row    = 0;
     int pCards = 0;//keep track of how many cards player has
-    int dcards = 0;//keep track of how many cards dealer has
+    int dCards = 0;//keep track of how many cards dealer has
 
     int deck[13][4];
     int pHand[2][12] = {0}; 
@@ -108,12 +110,15 @@ int main(){
     //player draw
     drawCard(deck, pHand, &pCards);
     drawCard(deck, pHand, &pCards);
- 
-    for(int i = 0; i < pCards; i++){
-        char temp[BIGENOUGH] = "";
-        getCardText(pHand[0][i], pHand[1][i], temp);
-        printf("[%s] ", temp);
-    }
+
+    //dealer draw
+    drawCard(deck, dHand, &dCards);
+    drawCard(deck, dHand, &dCards);
+
+    printHand(pHand, pCards);//print the cards in player hand
+    printHand(dHand, dCards);//print the cards in dealer hand
+
+    //Make a function that will print out all of the cards in a given players hand.
 
     printf("\n");
     printDeck(deck);
@@ -184,6 +189,17 @@ void getCardText(int r, int s, char *str){
             break;
     }
 
+}
+
+
+void printHand(int hand[][12], int count){
+    
+    for(int i = 0; i < count; i++){
+        char temp[BIGENOUGH] = "";
+        getCardText(hand[0][i], hand[1][i], temp);
+        printf("[%s] ", temp);
+    }
+    printf("\n");
 }
 
 
