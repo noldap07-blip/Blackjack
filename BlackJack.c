@@ -37,6 +37,7 @@ void getCardText(int, int, char[]);//fucntion for printing the text of a card wh
 void drawCard(int[][SUITS], int hand[][12], int *);//function that will pick a random rank and suit then add it to the given hand
 void printHand(int hand[][12], int count);//function will print each card in the given hand
 void printDeck(int[][SUITS]);//print the deck
+void gameLoop(int playerHand[2][12], int dealerHand[2][12], int playerCount, int dealerCount);
 
  
 
@@ -104,26 +105,44 @@ int main(){
         }
     }
     
-    printDeck(deck);
-    printf("\n");
+    // printDeck(deck);
+    // printf("\n");
     
-    //player draw
+    //player initial draw
     drawCard(deck, pHand, &pCards);
     drawCard(deck, pHand, &pCards);
 
-    //dealer draw
+    //dealer initial draw
     drawCard(deck, dHand, &dCards);
     drawCard(deck, dHand, &dCards);
 
-    printHand(pHand, pCards);//print the cards in player hand
-    printHand(dHand, dCards);//print the cards in dealer hand
-
-    //Make a function that will print out all of the cards in a given players hand.
-
-    printf("\n");
-    printDeck(deck);
+    gameLoop(pHand, dHand, pCards, dCards);
 
     return 0;
+}
+
+
+void gameLoop(int playerHand[2][12], int dealerHand[2][12], int playerCount, int dealerCount){
+    //when we enter this funciton we should already have added two cards into the players hand 
+    //so when we can Label each hand and then print them
+    char inputstr[16] = "";
+
+    while(strstr(inputstr, "STAND") == NULL){//loop through until the input sttr contains "STAND"
+        printf("\n%-13s", "Your Hand:");
+        printHand(playerHand, playerCount);//print the cards in player hand
+
+        printf("\n%-13s", "Dealer Hand:");
+        printHand(dealerHand, dealerCount);//print the cards in dealer hand
+
+        printf("\nDo you want to hit or stand? ");
+
+        do{//everytime we loop through get the user input atleast once
+            printf("Please enter HIT or STAND: ");
+            fgets(inputstr, BIGENOUGH, stdin);
+        }while(strstr(inputstr, "STAND") == NULL && strstr(inputstr, "HIT") == NULL);//make the user input again if doesnt contain HIT or STAND
+        
+    }
+    
 }
 
 
@@ -197,7 +216,9 @@ void printHand(int hand[][12], int count){
     for(int i = 0; i < count; i++){
         char temp[BIGENOUGH] = "";
         getCardText(hand[0][i], hand[1][i], temp);
-        printf("[%s] ", temp);
+
+        strcat(temp, "]");
+        printf("[%-16s", temp);
     }
     printf("\n");
 }
