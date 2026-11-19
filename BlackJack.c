@@ -37,7 +37,7 @@ void getCardText(int, int, char[]);//fucntion for printing the text of a card wh
 void drawCard(int[][SUITS], int hand[][12], int *);//function that will pick a random rank and suit then add it to the given hand
 void printHand(int hand[][12], int count);//function will print each card in the given hand
 void printDeck(int[][SUITS]);//print the deck
-void gameLoop(int playerHand[2][12], int dealerHand[2][12], int playerCount, int dealerCount);
+void gameLoop(int deck[][SUITS], int playerHand[2][12], int dealerHand[2][12], int playerCount, int dealerCount);
 
  
 
@@ -61,9 +61,7 @@ int main(){
         - so a 4 of clubs would be deck[3][2];
     - in the arary, by deafult every cell is set to 1.
     - a value of 1 for a cell means that card is still in the deck
-    - when a card is drawn it is either set to 0 or 2
-        - 0 means in the player hand 
-        - 2 means in the dealer hand
+    - when a card is drawn it is set to 0 in the deck 
 
     */
     /*
@@ -116,18 +114,21 @@ int main(){
     drawCard(deck, dHand, &dCards);
     drawCard(deck, dHand, &dCards);
 
-    gameLoop(pHand, dHand, pCards, dCards);
+    gameLoop(deck, pHand, dHand, pCards, dCards);
+
+    printDeck(deck);
 
     return 0;
 }
 
 
-void gameLoop(int playerHand[2][12], int dealerHand[2][12], int playerCount, int dealerCount){
+void gameLoop(int deck[][SUITS], int playerHand[2][12], int dealerHand[2][12], int playerCount, int dealerCount){
     //when we enter this funciton we should already have added two cards into the players hand 
     //so when we can Label each hand and then print them
     char inputstr[16] = "";
 
-    while(strstr(inputstr, "STAND") == NULL){//loop through until the input sttr contains "STAND"
+    while(strstr(inputstr, "STAND") == NULL){//loop through until the input sttr contains "STAND"S
+
         printf("\n%-13s", "Your Hand:");
         printHand(playerHand, playerCount);//print the cards in player hand
 
@@ -138,11 +139,13 @@ void gameLoop(int playerHand[2][12], int dealerHand[2][12], int playerCount, int
 
         do{//everytime we loop through get the user input atleast once
             printf("Please enter HIT or STAND: ");
-            fgets(inputstr, BIGENOUGH, stdin);
+            fgets(inputstr, sizeof(inputstr), stdin);
         }while(strstr(inputstr, "STAND") == NULL && strstr(inputstr, "HIT") == NULL);//make the user input again if doesnt contain HIT or STAND
         
+        if(strstr(inputstr, "HIT") != NULL){//draw a new card if the player Hits
+            drawCard(deck, playerHand, &playerCount);
+        }
     }
-    
 }
 
 
