@@ -38,6 +38,8 @@ void drawCard(int[][SUITS], int hand[][12], int *);//function that will pick a r
 void printHand(int hand[][12], int count);//function will print each card in the given hand
 void printDeck(int[][SUITS]);//print the deck
 void gameLoop(int deck[][SUITS], int playerHand[2][12], int dealerHand[2][12], int playerCount, int dealerCount);
+int scoreHand(int hand[2][12], int count);
+int scoreCard(int rank);
 
  
 
@@ -116,9 +118,37 @@ int main(){
 
     gameLoop(deck, pHand, dHand, pCards, dCards);
 
-    printDeck(deck);
+    // printDeck(deck);
 
     return 0;
+}
+
+
+int scoreCard(int rank){
+
+    int cardValue = 0;
+
+    if(rank >= 10){//10 is jack, 11 is queen, 12 is king
+        cardValue = 10;
+    }
+    else{//For non face cards the value is rank + 1
+        cardValue = rank + 1;
+    }
+
+    return cardValue;
+}
+
+
+int scoreHand(int hand[2][12], int count){
+    //loop through each card in teh given hand and then after we choose a score for the card
+    int runningTotal = 0;
+
+    for(int i = 0; i < count; i++){
+        if(hand[0][i] != 0)//dont want to do the aces until we know what the total is
+            runningTotal += scoreCard(hand[0][i]);//only need to check the card rank because for a score.
+    }
+
+    return runningTotal;
 }
 
 
@@ -131,9 +161,16 @@ void gameLoop(int deck[][SUITS], int playerHand[2][12], int dealerHand[2][12], i
 
         printf("\n%-13s", "Your Hand:");
         printHand(playerHand, playerCount);//print the cards in player hand
+        printf("Current Score: %d\n", scoreHand(playerHand, playerCount));
 
         printf("\n%-13s", "Dealer Hand:");
         printHand(dealerHand, dealerCount);//print the cards in dealer hand
+        printf("Current Score: %d\n", scoreHand(dealerHand, dealerCount));
+
+        if(scoreHand(playerHand, playerCount) > 21){
+            printf("You Bust!\n");
+            return;
+        }
 
         printf("\nDo you want to hit or stand? ");
 
