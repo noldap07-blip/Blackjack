@@ -144,8 +144,17 @@ int scoreHand(int hand[2][12], int count){
     int runningTotal = 0;
 
     for(int i = 0; i < count; i++){
-        if(hand[0][i] != 0)//dont want to do the aces until we know what the total is
+
+        if(hand[0][i] != 0){//dont want to do the aces until we know what the total is
             runningTotal += scoreCard(hand[0][i]);//only need to check the card rank because for a score.
+        }
+        else{
+            if(runningTotal + 11 > 21)
+                runningTotal += 1;
+            else
+                runningTotal += 11;
+        }
+        
     }
 
     return runningTotal;
