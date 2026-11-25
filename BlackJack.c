@@ -38,8 +38,10 @@ void drawCard(int[][SUITS], int hand[][12], int *);//function that will pick a r
 void printHand(int hand[][12], int count);//function will print each card in the given hand
 void printDeck(int[][SUITS]);//print the deck
 void gameLoop(int deck[][SUITS], int playerHand[2][12], int dealerHand[2][12], int playerCount, int dealerCount);
+void dealerTurn(int deck[][SUITS], int playerHand[2][12], int dealerHand[2][12], int playerCount, int dealerCount);
 int scoreHand(int hand[2][12], int count);
 int scoreCard(int rank);
+
 
  
 
@@ -166,15 +168,17 @@ void gameLoop(int deck[][SUITS], int playerHand[2][12], int dealerHand[2][12], i
     //so when we can Label each hand and then print them
     char inputstr[16] = "";
 
-    while(strstr(inputstr, "STAND") == NULL){//loop through until the input sttr contains "STAND"S
+    while(strstr(inputstr, "STAND") == NULL){//loop through until the input sttr contains "STAND"
 
         printf("\n%-13s", "Your Hand:");
         printHand(playerHand, playerCount);//print the cards in player hand
-        printf("Current Score: %d\n", scoreHand(playerHand, playerCount));
+        // printf("Current Score: %d\n", scoreHand(playerHand, playerCount));
 
         printf("\n%-13s", "Dealer Hand:");
-        printHand(dealerHand, dealerCount);//print the cards in dealer hand
-        printf("Current Score: %d\n", scoreHand(dealerHand, dealerCount));
+        printf("%-21s", "[HIDDEN]");
+        printHand(dealerHand, dealerCount-1);//print the cards in dealer hand -1 so the player cant see the second card
+        
+        // printf("Current Score: %d\n", scoreHand(dealerHand, dealerCount));
 
         if(scoreHand(playerHand, playerCount) > 21){
             printf("You Bust!\n");
@@ -192,6 +196,34 @@ void gameLoop(int deck[][SUITS], int playerHand[2][12], int dealerHand[2][12], i
             drawCard(deck, playerHand, &playerCount);
         }
     }
+
+    dealerTurn(deck, playerHand, dealerHand, playerCount, dealerCount);
+}
+
+void dealerTurn(int deck[][SUITS], int playerHand[2][12], int dealerHand[2][12], int playerCount, int dealerCount){
+    printf("\n//////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\n");
+    printf("%40s\n", "DEALER'S TURN");
+
+    printf("\n%-13s", "Your Hand:");
+    printHand(playerHand, playerCount);
+    printf("\n%-13s", "Dealer Hand:");
+    printHand(dealerHand, dealerCount);
+
+    while(scoreHand(dealerHand, dealerCount) < 17){//dealer only hits if their score is 16 or fewer
+        printf("\n//////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\n");
+        printf("%39s\n", "DEALER HITS");
+
+        drawCard(deck, dealerHand, &dealerCount);
+
+        printf("\n%-13s", "Your Hand:");
+        printHand(playerHand, playerCount);
+        printf("\n%-13s", "Dealer Hand:");
+        printHand(dealerHand, dealerCount);
+
+    }
+
+    printf("\n//////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\n");
+    printf("%40s\n", "DEALER STANDS");
 }
 
 
@@ -267,7 +299,7 @@ void printHand(int hand[][12], int count){
         getCardText(hand[0][i], hand[1][i], temp);
 
         strcat(temp, "]");
-        printf("[%-16s", temp);
+        printf("[%-20s", temp);
     }
     printf("\n");
 }
